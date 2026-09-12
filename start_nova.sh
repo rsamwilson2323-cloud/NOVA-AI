@@ -1,0 +1,56 @@
+#!/bin/bash
+# NOVA — Start Script (Linux/macOS)
+# Ensure we're in the project root
+cd "$(dirname "$0")" || exit 1
+
+# Kill any ghost background processes holding ports
+pkill -f "uvicorn agent.server:app" 2>/dev/null || true
+
+echo "Starting NOVA..."
+echo "=========================================================="
+
+# 0. Make sure Node dependencies are installed (node_modules is
+#    gitignored, so a fresh clone will not have it yet).
+if [ ! -d "node_modules" ] || [ ! -x "node_modules/.bin/tsx" ]; then
+    echo ">>> node_modules missing/incomplete - running npm install..."
+    npm install || { echo "ERROR: npm install failed."; exit 1; }
+fi
+
+# Pick a Python interpreter: prefer the local venv, else whatever's on PATH.
+if [ -x "venv/bin/python" ]; then
+    PYEXE="venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then
+    PYEXE="python3"
+else
+    PYEXE="python"
+fi
+
+# Make sure the agent's Python deps are importable before launching.
+echo ">>> Checking Python agent dependencies ($PYEXE)..."
+if ! "$PYEXE" -c "import fastapi, uvicorn, pydantic" 2>/dev/null; then
+    echo ">>> Required Python packages missing - installing from agent/requirements.txt..."
+    "$PYEXE" -m pip install -r agent/requirements.txt || { echo "ERROR: pip install failed."; exit 1; }
+fi
+
+# 1. Start Python Agent Background Process
+echo ">>> Starting Python Core Agent on Port 8765..."
+"$PYEXE" run_agent.py &
+PYTHON_PID=$!
+
+sleep 2
+
+# 2. Start Node server (and Vite Dev frontend)
+echo ">>> Starting Node WebSocket Server & Vite Frontend..."
+npm run dev &
+NODE_PID=$!
+
+echo ""
+echo "=========================================================="
+echo "NOVA is running!"
+echo "Open your browser at: http://localhost:3000"
+echo "Press Ctrl+C to stop everything."
+echo "=========================================================="
+
+trap "echo 'Stopping NOVA...'; kill $PYTHON_PID $NODE_PID 2>/dev/null; exit" SIGINT SIGTERM
+
+wait

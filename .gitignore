@@ -1,0 +1,12 @@
+node_modules/
+dist/
+venv/
+__pycache__/
+*.pyc
+.env
+logs/
+.gemini/
+WhatsApp*
+memories.json
+settings.json
+secrets.json
