@@ -57,7 +57,7 @@ Nova-AI runs as **3 separate processes** that communicate over HTTP/WebSocket:
 ```
 
 | Process | Port | Runtime | Role |
-|---|---|---|---|---|
+|---|---|---|---|
 | **Node.js Server** | 3000 | Express + WebSocket | Orchestrator. Bridges browser to Gemini Live API. Handles function calling, memory CRUD, reminders, settings, API key storage. |
 | **Python Desktop Agent** | 8765 | FastAPI + Playwright | OS-level tool execution. 91 tools across 22 modules. Receives `POST /execute { tool, args }` dispatches. Manages browser (CDP/managed modes), screenshots, clipboard, files, power, terminal, Hyprland workspaces, weather, news, coding, conversation export, Google Calendar/Gmail/Tasks, OS input simulation. |
 | **Vite React Frontend** | 3000 (served) | React 19 + Tailwind CSS v4 | Holographic UI with canvas visualizer, video character or orb animation, settings panel, memory dashboard, transcript, browser agent, text chat fallback, sudo popup. |
