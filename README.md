@@ -54,7 +54,10 @@ Nova-AI runs as **3 separate processes** that communicate over HTTP/WebSocket:
 │  Memory/Reminder │     │  Browser automation    │
 │  Function calling│     │  File system, System   │
 └─────────────────┘     └──────────────────────┘
+
 ```
+
+--- 
 
 | Process | Port | Runtime | Role |
 |---|---|---|---|
@@ -77,12 +80,18 @@ Nova-AI runs as **3 separate processes** that communicate over HTTP/WebSocket:
 - Web Audio API — PCM audio encoding/decoding for Gemini Live (16-bit, 16kHz)
 - `getDisplayMedia` — screen sharing to Gemini
 
+--- 
+
+
 ### Backend (Node.js)
 - **Express** HTTP server
 - **ws** WebSocket library for Gemini Live API streaming
 - **@google/genai** SDK for Gemini function calling
 - **esbuild** for server bundling
 - Optional: **Electron** for desktop wrapper
+
+--- 
+
 
 ### Backend (Python Desktop Agent)
 - **FastAPI** + **Uvicorn**
@@ -94,6 +103,9 @@ Nova-AI runs as **3 separate processes** that communicate over HTTP/WebSocket:
 - **pycaw** (Windows audio)
 - **Send2Trash** (safe file deletion)
 - **nvidia-ml-py3** (NVIDIA GPU stats)
+
+--- 
+
 
 ### Platform Abstraction
 The Python agent has a backend abstraction layer for cross-platform support:
