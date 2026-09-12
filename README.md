@@ -34,6 +34,8 @@ A real-time, voice-to-voice holographic AI companion desktop assistant built on 
 
 </div>
 
+---
+
 Nova-AI runs as **3 separate processes** that communicate over HTTP/WebSocket:
 
 ```
